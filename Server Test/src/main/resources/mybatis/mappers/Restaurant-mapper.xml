@@ -1,0 +1,15 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.servertest.mapper.RestaurantMapper">
+    <select id="check_Restaurant" parameterType="com.servertest.dto.RestaurantDTO" resultType="com.servertest.dto.RestaurantDTO">
+        select * from restaurant
+        where id = #{id};
+    </select>
+    <insert id="insert_Restaurant" parameterType="com.servertest.dto.RestaurantDTO">
+        insert into restaurant (id, name,gnn,viewCount) values (#{id},#{name},#{gnn},0);
+    </insert>
+    <update id="update_Restaurant" parameterType="com.servertest.dto.RestaurantDTO">
+        update restaurant set viewCount=#{viewCount} where id = #{id};
+    </update>
+</mapper>

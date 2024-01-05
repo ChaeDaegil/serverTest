@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<style>
+    main{
+        width: 500px;
+        height: 500px;
+        border: 1px solid black;
+        margin: 0 auto;
+    }
+    table{
+        border: 1px solid black;
+        width: 100%;
+    }
+</style>
+<body>
+    <main>
+        <div>
+            <label hidden="hidden">
+                시 :
+                <select name="si" id="si">
+                    <option>
+                        대구
+                    </option>
+                </select>
+            </label>
+            <label>
+                시/군/구:
+                <select name="gnn" id="gnn">
+                    <option>북구</option>
+                    <option>동구</option>
+                    <option>서구</option>
+                    <option>남구</option>
+                    <option>중구</option>
+                    <option>수성구</option>
+                    <option>달서구</option>
+                    <option>달성군</option>
+                    <option>군위군</option>
+                </select>
+            </label>
+            <label hidden="hidden">
+                구 :
+                <select name="gu" id="gu">
+                    <option>
+                        대현동
+                    </option>
+                </select>
+            </label>
+        </div>
+        <div>
+            page : <input class="page" type="text">
+            perPage : <input class="perPage" type="text">
+        </div>
+        <button id="send_btn">확인</button>
+        <div>
+            <table border="1">
+                <thead>
+                    <tr>
+                        <th>가맹정</th>
+                        <th>시/군/구</th>
+                        <th>조회수</th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                </tbody>
+            </table>
+        </div>
+    </main>
+</body>
+</html>
+<script>
+    const [siTag,gnnTag,guTag] = document.querySelectorAll('select')
+    const pageTag = document.querySelector('.page')
+    const perPageTag = document.querySelector('.perPage')
+    const sendBtn = document.querySelector('#send_btn');
+    const tbodyTag = document.querySelector('tbody');
+    sendBtn.onclick=()=>{
+        const sendObj = {
+            si:siTag.value,
+            gnn:gnnTag.value,
+            gu:guTag.value,
+            page: pageTag.value,
+            perPage: perPageTag.value };
+        fetch('/restaurantApi', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(sendObj)
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                tbodyTag.innerHTML="";
+                data.forEach(restaurant=>{
+
+                    tbodyTag.innerHTML += "<tr>" +
+                        "<th>"+restaurant.name+"</th>" +
+                        "<th>"+restaurant.gnn+"</th>" +
+                        "<th>"+restaurant.viewCount+"</th>" +
+                        "</tr>";
+                })
+                console.log("data : " + data.toString())
+                console.log(data);
+            })
+            .catch(error => {
+                console.error('There was a problem with the fetch operation:', error);
+            });
+    }
+</script>
